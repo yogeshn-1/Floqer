@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { salaryData, SalaryData } from "../data/data";
+import { useNavigate } from "react-router-dom";
+
 import {
   LineChart,
   Line,
@@ -45,6 +47,8 @@ const Table = () => {
     direction: "ascending" | "descending";
   } | null>(null);
 
+  const navigate = useNavigate();
+
   const sortData = (key: keyof AggregatedData) => {
     let direction: "ascending" | "descending" = "ascending";
     if (
@@ -68,14 +72,18 @@ const Table = () => {
     setData(sortedData);
   };
 
+  const handleRowClick = (year: number) => {
+    navigate(`/job-titles/${year}`);
+  };
+
   return (
     <div className="flex flex-col gap-6 items-center">
       <h2 className="text-center text-2xl font-bold">Engineering Salaries</h2>
-      <table className="table-fixed w-3/4 border-2">
+      <table className="table-fixed w-3/4 border-2 border-black">
         <thead>
           <tr>
             <th
-              className="border-2 bg-slate-400"
+              className="border-2 border-black bg-slate-400 cursor-pointer"
               onClick={() => sortData("year")}
             >
               Year{" "}
@@ -87,7 +95,7 @@ const Table = () => {
                   : "")}
             </th>
             <th
-              className="border-2 p-2 bg-slate-400 "
+              className="border-2 border-black p-2 bg-slate-400 cursor-pointer "
               onClick={() => sortData("totalJobs")}
             >
               Total Jobs{" "}
@@ -99,7 +107,7 @@ const Table = () => {
                   : "")}
             </th>
             <th
-              className="border-2 bg-slate-400"
+              className="border-2 border-black bg-slate-400 cursor-pointer"
               onClick={() => sortData("averageSalary")}
             >
               Average Salary (USD)
@@ -114,10 +122,14 @@ const Table = () => {
         </thead>
         <tbody>
           {data.map((row) => (
-            <tr key={row.year}>
-              <td className="text-center border p-2">{row.year}</td>
-              <td className="text-center border p-2">{row.totalJobs}</td>
-              <td className="text-center border p-2">
+            <tr key={row.year} onClick={() => handleRowClick(row.year)}>
+              <td className="text-center border border-black p-2 cursor-pointer">
+                {row.year}
+              </td>
+              <td className="text-center border border-black p-2">
+                {row.totalJobs}
+              </td>
+              <td className="text-center border border-black p-2">
                 {row.averageSalary.toFixed(2)}
               </td>
             </tr>
@@ -131,7 +143,7 @@ const Table = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="totalJobs" stroke="#8884d8" />
+          <Line type="monotone" dataKey="totalJobs" stroke="#0a0a0b" />
         </LineChart>
       </ResponsiveContainer>
     </div>
