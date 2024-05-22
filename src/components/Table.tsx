@@ -1,5 +1,16 @@
 import { useState } from "react";
 import { salaryData, SalaryData } from "../data/data";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 interface AggregatedData {
   year: number;
   totalJobs: number;
@@ -58,59 +69,72 @@ const Table = () => {
   };
 
   return (
-    <table className="table-fixed w-full border-2">
-      <thead>
-        <tr>
-          <th
-            className="border-2 bg-slate-400"
-            onClick={() => sortData("year")}
-          >
-            Year{" "}
-            {sortConfig?.key === "year" &&
-              (sortConfig?.direction && sortConfig?.direction == "ascending"
-                ? " ↓"
-                : sortConfig?.direction == "descending"
-                ? " ↑"
-                : "")}
-          </th>
-          <th
-            className="border-2 p-2 bg-slate-400 "
-            onClick={() => sortData("totalJobs")}
-          >
-            Total Jobs{" "}
-            {sortConfig?.key === "totalJobs" &&
-              (sortConfig?.direction && sortConfig?.direction == "ascending"
-                ? " ↓"
-                : sortConfig?.direction == "descending"
-                ? " ↑"
-                : "")}
-          </th>
-          <th
-            className="border-2 bg-slate-400"
-            onClick={() => sortData("averageSalary")}
-          >
-            Average Salary (USD)
-            {sortConfig?.key === "averageSalary" &&
-              (sortConfig?.direction && sortConfig?.direction == "ascending"
-                ? " ↓"
-                : sortConfig?.direction == "descending"
-                ? " ↑"
-                : "")}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row) => (
-          <tr key={row.year}>
-            <td className="text-center border p-2">{row.year}</td>
-            <td className="text-center border p-2">{row.totalJobs}</td>
-            <td className="text-center border p-2">
-              {row.averageSalary.toFixed(2)}
-            </td>
+    <div className="flex flex-col gap-6 items-center">
+      <h2 className="text-center text-2xl font-bold">Engineering Salaries</h2>
+      <table className="table-fixed w-3/4 border-2">
+        <thead>
+          <tr>
+            <th
+              className="border-2 bg-slate-400"
+              onClick={() => sortData("year")}
+            >
+              Year{" "}
+              {sortConfig?.key === "year" &&
+                (sortConfig?.direction && sortConfig?.direction == "ascending"
+                  ? " ↓"
+                  : sortConfig?.direction == "descending"
+                  ? " ↑"
+                  : "")}
+            </th>
+            <th
+              className="border-2 p-2 bg-slate-400 "
+              onClick={() => sortData("totalJobs")}
+            >
+              Total Jobs{" "}
+              {sortConfig?.key === "totalJobs" &&
+                (sortConfig?.direction && sortConfig?.direction == "ascending"
+                  ? " ↓"
+                  : sortConfig?.direction == "descending"
+                  ? " ↑"
+                  : "")}
+            </th>
+            <th
+              className="border-2 bg-slate-400"
+              onClick={() => sortData("averageSalary")}
+            >
+              Average Salary (USD)
+              {sortConfig?.key === "averageSalary" &&
+                (sortConfig?.direction && sortConfig?.direction == "ascending"
+                  ? " ↓"
+                  : sortConfig?.direction == "descending"
+                  ? " ↑"
+                  : "")}
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.map((row) => (
+            <tr key={row.year}>
+              <td className="text-center border p-2">{row.year}</td>
+              <td className="text-center border p-2">{row.totalJobs}</td>
+              <td className="text-center border p-2">
+                {row.averageSalary.toFixed(2)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ResponsiveContainer width="90%" height={350}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="year" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="totalJobs" stroke="#8884d8" />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
